@@ -4,12 +4,10 @@ function! lsp#tinysnippet#move_to_top_of_new_text() abort
     try
         let l:user_data = json_decode(v:completed_item['user_data'])
     catch
-        echo 'v:completed_item:' . v:completed_item['user_data']
         return
     endtry
 
     if type(l:user_data) != type({})
-        echo 'l:user_data:' . l:user_data
         return
     endif
 
