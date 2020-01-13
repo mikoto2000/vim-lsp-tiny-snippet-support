@@ -1,8 +1,25 @@
 let s:pattern_of_tabstop_or_placeholder = '\(\${\d\{-\}:\w\{-\}}\|\$\d\)'
 
 function! lsp#tinysnippet#expand(params) abort
-    execute printf('normal! i%s', a:params.snippet)
-    execute printf('normal! %sh', strlen(a:params.snippet) - 1)
+    let l:text = a:params.snippet
+
+    " 改行正規化
+    let l:text = substitute(l:text, '\r\n', '\n', 'g')
+
+    " 行数計算
+    let l:text_lines = split(l:text, '\n')
+    let l:text_line_num = len(l:text_lines)
+
+    " 文字挿入
+    silent execute printf('normal! i%s', a:params.snippet)
+
+    " 縦方向の移動
+    if l:text_line_num > 1
+        silent execute printf('normal! %sk$', l:text_line_num - 1)
+    endif
+
+    " 横方向の移動
+    silent execute printf('normal! %sh', strlen(l:text_lines[0]) - 1)
 endfunction
 
 
