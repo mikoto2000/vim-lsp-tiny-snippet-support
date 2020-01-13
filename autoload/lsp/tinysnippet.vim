@@ -1,22 +1,10 @@
 let s:pattern_of_tabstop_or_placeholder = '\(\${\d\{-\}:\w\{-\}}\|\$\d\)'
 
-function! lsp#tinysnippet#move_to_top_of_new_text() abort
-    try
-        let l:user_data = json_decode(v:completed_item['user_data'])
-    catch
-        return
-    endtry
-
-    if type(l:user_data) != type({})
-        return
-    endif
-
-    let l:position = l:user_data['vim-lsp/textEdit']['range']['start']
-    let l:row = l:position['line'] + 1
-    let l:col = l:position['character'] + 1
-
-    call cursor(l:row, l:col)
+function! lsp#tinysnippet#expand(params) abort
+    execute printf('normal! i%s', a:params.snippet)
+    execute printf('normal! %sh', strlen(a:params.snippet) - 1)
 endfunction
+
 
 """ {{{ LSP形式のタブストップ($1)かプレースホルダ(${1:xxx}, $1)までジャンプする
 function! lsp#tinysnippet#select_next() abort
